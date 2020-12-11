@@ -9,5 +9,28 @@ $.ajaxPrefilter(function(options) {
     // 此次修改过后，不用再在自己编写的 js 文件中输入根路径了
     // 只需要输入每次请求时的接口 URL 就行
     // 同时，如果项目请求的根路径发生改变时，直接在此快捷修改
-    options.url = 'http://ajax.frontend.itheima.net' + options.url
+    options.url = 'http://ajax.frontend.itheima.net' + options.url;
+
+
+    // 统一为有权限的接口，设置 headers 请求头
+    // 先判断接口是否需要权限，根据接口文档来写
+    if (options.url.indexOf('/my/') !== -1) {
+        options.headers = {
+            Authorization: localStorage.getItem('token') || ''
+        }
+    }
+
+
+    // 全局统一设置 complete 回调函数
+    // 每次发起请求，不论是否成功或失败，最终都会调用 complete 回调函数
+    options.complete = function(res) {
+        // 在 complete 回调函数中，可以使用自带的 res.responseJSON 拿到服务器响应回来的数据
+        if (res.responseJSON.status === 1 && res.responseJSON.message === '身份认证失败！') {
+            // 1. 强制清空 token
+            localStorage.removeItem('token');
+            // 2. 强制跳转到登录页面
+            location.href = '/login.html';
+        }
+    }
+
 })
