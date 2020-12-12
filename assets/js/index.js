@@ -74,6 +74,7 @@ function renderAvatar(user) {
         $('.layui-nav-img').hide();
         // 字符串可以像数组那样操作，来获取第一个字符串并转换成大写
         var first = name[0].toUpperCase();
-        $('.text-avater').html(first).show();
+        $('.text-avatar').html(first).show();
+        // console.log(first);
     }
 }
